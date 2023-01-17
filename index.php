@@ -17,35 +17,42 @@
   <br>
     <h3> Kje želiš začeti potovanje? </h3>
     Iz katere države boš začel potovanje?
-    <select class="form-select" aria-label="Default select example">
+    <select class="form-select" id="country" name="country" aria-label="Default select example">
       <?php  
         require_once 'database.php';
-        $query = "SELECT DISTINCT country FROM location";
+        $query = "SELECT DISTINCT(country) FROM location";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         while($row = $stmt ->fetch()){
-        echo "<option value ='".$row['id']."'>".$row['country']."</option>";
+        echo "<option value ='".$row['country']."'>".$row['country']."</option>";
         }
       ?>
 </select>
-
+    <script>
+        $(document).ready(function(){
+            $('#country').change(function(){
+                var country = $(this).val();
+                $.ajax({
+                    url:"fetch.php",
+                    method:"POST",
+                    data:{country:country},
+                    dataType:"text",
+                    success:function(data){
+                        $('#city').html(data);
+                        console.log(data);
+                    }
+                });
+            });
+        });
+</script>
 V katerem mestu boš začel potovanje?
-<select class="form-select" aria-label="Default select example">
-      <?php  
-        require_once 'database.php';
-        $query = "SELECT DISTINCT city FROM location";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        while($row = $stmt ->fetch()){
-        echo "<option value ='".$row['id']."'>".$row['city']."</option>";
-        }
-      ?>
+<select class="form-select" name ="city" id ="city" aria-label="Default select example">
 </select>
 <br>
 
     <h3>Kam želiš iti?</h3>
        V katero državo želiš potovati?
-    <select class="form-select" aria-label="Default select example">
+    <select class="form-select" aria-label="Default select example" onchange="getCities()">
       <?php  
         require_once 'database.php';
         $query = "SELECT DISTINCT country FROM location";
