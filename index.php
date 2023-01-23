@@ -18,6 +18,7 @@
     <h3> Kje želiš začeti potovanje? </h3>
     Iz katere države boš začel potovanje?
     <select class="form-select" id="country" name="country" aria-label="Default select example">
+      <option value="">Izberi državo</option>
       <?php  
         require_once 'database.php';
         $query = "SELECT DISTINCT(country) FROM location";
@@ -27,7 +28,7 @@
         echo "<option value ='".$row['country']."'>".$row['country']."</option>";
         }
       ?>
-</select>
+</select> 
     <script>
         $(document).ready(function(){
             $('#country').change(function(){
@@ -47,6 +48,7 @@
 </script>
 V katerem mestu boš začel potovanje?
 <select class="form-select" name ="city" id ="city" aria-label="Default select example">
+  <option value="">Izberi mesto</option>
 </select>
 <br>
 
