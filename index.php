@@ -14,8 +14,9 @@
 <div class="row h-100 justify-content-center align-items-center">
   <div class="col-10 col-md-8 col-lg-6">
   <h1  style="text-align: center;"> Organiziraj svoje potovanje</h1>
-  <br>
-    <h3> Kje želiš začeti potovanje? </h3>
+     <form action = "path_calculate.php" method = "post">
+    <br>
+      <h3> Kje želiš začeti potovanje? </h3>
     Iz katere države boš začel potovanje?
     <select class="form-select" id="country" name="country" aria-label="Default select example">
       <option value="">Izberi državo</option>
@@ -31,7 +32,7 @@
 </select> 
     <script>
         $(document).ready(function(){
-            $('#country2').change(function(){
+            $('#country').change(function(){
                 var country = $(this).val();
                 $.ajax({
                     url:"fetch.php",
@@ -39,7 +40,7 @@
                     data:{country:country},
                     dataType:"text",
                     success:function(data){
-                        $('#city2').html(data);
+                        $('#city').html(data);
                         console.log(data);
                     }
                 });
@@ -55,6 +56,7 @@ V katerem mestu boš začel potovanje?
     <h3>Kam želiš iti?</h3>
        V katero državo želiš potovati?
     <select class="form-select" id="country2" name="country2" aria-label="Default select example" onchange="getCities()">
+    <option value="">Izberi državo</option>
     <?php  
         require_once 'database.php';
         $query = "SELECT DISTINCT(country) FROM location";
@@ -80,7 +82,7 @@ V katerem mestu boš začel potovanje?
 </select>
 <script>
         $(document).ready(function(){
-            $('#country').change(function(){
+            $('#country2').change(function(){
                 var country = $(this).val();
                 $.ajax({
                     url:"fetch.php",
@@ -88,7 +90,7 @@ V katerem mestu boš začel potovanje?
                     data:{country:country},
                     dataType:"text",
                     success:function(data){
-                        $('#city').html(data);
+                        $('#city2').html(data);
                         console.log(data);
                     }
                 });
@@ -100,7 +102,7 @@ Koliko dni želiš potovati?
   <input type="number" id="typeNumber" class="form-control" placeholder = "Trajanje potovanja (dnevi)" />
 </div>
 <br>
-<button type="button" class="btn btn-primary btncolor">Submit</button>
+<button type = "submit" style = " background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);"class="btn d-block w-100 d-sm-inline-block btn-light">Izračun poti</button>
 </form>
 </div>
 </div>

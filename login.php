@@ -1,5 +1,11 @@
 <?php
 include_once './header.php';
+if(isset($_GET['error']))
+{
+    echo '<div class="alert alert-danger" role="alert">
+    Prijava ni uspela!
+  </div>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="sl" class="h-100">
