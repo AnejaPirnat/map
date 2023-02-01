@@ -52,7 +52,7 @@ $citystop = $stmt->fetch();
 $distance = get_great_circle_distance($city['lat'], $city['lng'], $citystop['lat'], $citystop['lng']);
 if($city['lat'] != $citystop['lat'] && $city['lng'] != $citystop['lng'])
 {
-    if($distance < 80) 
+    if($distance < 50) 
     {
     // Insert the random city into the path
     array_splice($path, 1, 0, array($citystop));
