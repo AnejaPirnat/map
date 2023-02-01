@@ -21,6 +21,7 @@ $stmt->execute([$_POST['city2']]);
 $row = $stmt->fetch();
 $cityname2 = $row['city'];
 $city2 = array("lat" => $row['latitude'], "lng" => $row['longitude']);
+$days = $_POST['days'];
 
 ?>
 <body class="h-100">
@@ -38,14 +39,60 @@ $city2 = array("lat" => $row['latitude'], "lng" => $row['longitude']);
 
 // Plot the path between the two cities
 $path = array($city, $city2);
+$stops = array_slice($path, 0, $days + 1);
 
-// Print the path coordinates
-$url = "https://www.google.com/maps/dir/" . 
-    $path[0]['lat'] . "%2F" . $path[0]['lng'] . "/" . 
-    $path[1]['lat'] . "%2F" . $path[1]['lng'] . "/@45.6707088,13.9229265,9z/data=!4m9!4m8!1m3!2m2!1d" . 
-    $path[0]['lng'] . "!2d" . $path[0]['lat'] . "!1m3!2m2!1d" . 
-    $path[1]['lng'] . "!2d" . $path[1]['lat'];
-echo '<a href='.$url.'"  style = " background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);" class="btn d-block w-100 d-sm-inline-block btn-light">Oglej si potovanje</a>'
+for ($i = 0; $i < $days; $i++)
+{
+$query = "SELECT latitude AS lat, longitude AS lng FROM location ORDER BY RAND() LIMIT 1";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$citystop = $stmt->fetch();
+
+// Check if the random city is near the path
+$distance = get_great_circle_distance($city['lat'], $city['lng'], $citystop['lat'], $citystop['lng']);
+if($city['lat'] != $citystop['lat'] && $city['lng'] != $citystop['lng'])
+{
+    if($distance < 80) 
+    {
+    // Insert the random city into the path
+    array_splice($path, 1, 0, array($citystop));
+    }
+    else
+    {
+         $i--;
+    }
+}
+else
+{
+    $i--;
+}
+}
+$stops = array_slice($path, 0, $days + 1);
+
+$urls = array();
+
+foreach($stops as $coordinate) {
+    $urls[] = $coordinate['lat'] . "%2F" . $coordinate['lng'];
+}
+
+$urls[] = $city2['lat'] . "%2F" . $city2['lng'];
+
+$url = "https://www.google.com/maps/dir/" . implode("/", $urls) . "/@45.9318581,14.2233111,8.72z/data=!4m" . (count($stops) + 3) . "!4m" . (count($stops) + 2) . "!1m3";
+echo '<a href='.$url.'" target="_blank"  style = " background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);" class="btn d-block w-100 d-sm-inline-block btn-light">Oglej si potovanje</a>';
+
+// Get the great circle distance between two points
+function get_great_circle_distance($lat1, $lng1, $lat2, $lng2) {
+    $earth_radius = 6371;
+
+    $dLat = deg2rad($lat2 - $lat1);
+    $dLng = deg2rad($lng2 - $lng1);
+
+    $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLng/2) * sin($dLng/2);
+    $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+
+    return $earth_radius * $c;
+}
+
 ?>
 
 
