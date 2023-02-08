@@ -14,7 +14,7 @@
 <div class="row h-100 justify-content-center align-items-center">
   <div class="col-10 col-md-8 col-lg-6">
   <h1  style="text-align: center;"> Organiziraj svoje potovanje</h1>
-     <form action = "path_calculate.php" method = "post">
+     <form action = "path_calculate_2.php" method = "post">
     <br>
       <h3> Kje želiš začeti potovanje? </h3>
     Iz katere države boš začel potovanje?
