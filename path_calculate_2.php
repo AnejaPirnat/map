@@ -78,7 +78,7 @@ $path[count($path) - 1] = $city2;
   <h1  style="text-align: center;"> Tvoje potovanje je ustvarjeno!</h1>
   <br>
 <?php
- echo "<div class='borderbox'> <h3 style='text-align: center;'> <i class='bi bi-geo-alt'></i>" . $city1['city'] . "<i class='bi bi-arrow-right'></i> " . $city2['city'] . "<i class='bi bi-flag'></i></h3> </div>";
+ echo "<div> <h3 style='text-align: center;'> <i class='bi bi-geo-alt'></i>" . $city1['city'] . "<i class='bi bi-arrow-right'></i> " . $city2['city'] . "<i class='bi bi-flag'></i></h3> </div>";
  echo "<hr>";
  echo "<br>";
  echo "<h5 style='text-align: center;'><i class='bi bi-geo-alt'></i>". $city1['city'] ."\n";
@@ -92,6 +92,7 @@ $path[count($path) - 1] = $city2;
 ?>
 <br>
 <br>
+<hr>
   <h3 style="text-align: center;"> Klikni na spodnjo povezavo, da si ogledaš potovanje na Google Maps </h3>
 <?php
 

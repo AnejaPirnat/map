@@ -9,12 +9,7 @@
     border: black;
 }
 
-.borderbox
-{
-    background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);
-    border-radius: 10px;
-    padding: 10px;
-}
+
 body
 {
     background: radial-gradient(circle, rgba(243,243,243,1) 0%, rgba(255,255,255,1) 100%);
