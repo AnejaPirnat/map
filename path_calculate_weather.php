@@ -38,7 +38,7 @@ $semi_major = sqrt(pow($city1['latitude'] - $center_lat, 2) + pow($city1['longit
 $semi_minor = sqrt(pow($city2['latitude'] - $center_lat, 2) + pow($city2['longitude'] - $center_lng, 2));
 
 // Select all of the cities in the oval shape
-$query = "SELECT city, latitude, longitude FROM location WHERE 
+$query = "SELECT * FROM location WHERE 
   (pow((latitude - ?), 2) / pow(?, 2)) + (pow((longitude - ?), 2) / pow(?, 2)) <= 1";
 $stmt = $pdo->prepare($query);
 $stmt->execute([$center_lat, $semi_major, $center_lng, $semi_minor]);
@@ -66,29 +66,49 @@ for ($i = 0; $i <= 1; $i += $step_size) {
   
     $path[] = $nearest_city;
   }
-  $path[count($path) - 1] = $city2;
+
+  $lolpath = [];
+  foreach($path as $city){
+    $query = "SELECT * FROM location WHERE longitude < ? AND longitude > ?  AND latitude < ? AND latitude > ? ";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$city['longitude'] + 0.5, $city['longitude'] - 0.5, $city['latitude'] + 0.5, $city['latitude'] - 0.5]);
+    $cities = $stmt->fetchAll();
+    $highest = -100;
+    foreach($cities as $c){
+      $url = "http://api.weatherapi.com/v1/current.json?key=e7c793d102d04bd58b1121742231302&q=" . $c['city'];
+      $weather = json_decode(file_get_contents($url), true);
+      if($weather['current']['temp_c'] > $highest){
+        $highest = $weather['current']['temp_c'];
+        $highest_temp_city= $c;
+      }
+    }
+    $lolpath[] = $highest_temp_city;
+  }
+  $lolpath[0] = $city1;
+  $lolpath[count($lolpath) - 1] = $path[count($path) - 1];
 
   // Get the weather information for each city along the path
 $weather_data = [];
-foreach ($path as $city) {
+foreach ($lolpath as $city) {
   $url = "http://api.weatherapi.com/v1/current.json?key=e7c793d102d04bd58b1121742231302&q=" . $city['city'];
   $weather = json_decode(file_get_contents($url), true);
   $weather_data[$city['city']] = $weather['current']['temp_c'];
 }
 
-// Sort the cities along the path based on temperature
-asort($weather_data);
+
 
 // Get the sorted path
 $sorted_path = [];
 foreach (array_keys($weather_data) as $city) {
-  foreach ($path as $c) {
+  foreach ($lolpath as $c) {
     if ($c['city'] == $city) {
       $sorted_path[] = $c;
       break;
     }
   }
 }
+
+
 
 // Output the sorted path
 ?>
@@ -113,7 +133,7 @@ foreach (array_keys($weather_data) as $city) {
 
    $map_link = "https://www.google.com/maps/dir/";
 
-foreach ($path as $point) {
+foreach ($lolpath as $point) {
   $map_link .= $point["latitude"] . "%2F" . $point["longitude"] . "/";
 }
 
