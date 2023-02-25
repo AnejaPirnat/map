@@ -67,7 +67,7 @@ for ($i = 0; $i <= 1; $i += $step_size) {
     $path[] = $nearest_city;
   }
 
-  $lolpath = [];
+  $finalpath = [];
   foreach($path as $city){
     $query = "SELECT * FROM location WHERE longitude < ? AND longitude > ?  AND latitude < ? AND latitude > ? ";
     $stmt = $pdo->prepare($query);
@@ -82,33 +82,29 @@ for ($i = 0; $i <= 1; $i += $step_size) {
         $highest_temp_city= $c;
       }
     }
-    $lolpath[] = $highest_temp_city;
+    $finalpath[] = $highest_temp_city;
   }
-  $lolpath[0] = $city1;
-  $lolpath[count($lolpath) - 1] = $path[count($path) - 1];
+  $finalpath[0] = $city1;
+  $finalpath[count($finalpath) - 1] = $path[count($path) - 1];
 
   // Get the weather information for each city along the path
 $weather_data = [];
-foreach ($lolpath as $city) {
+foreach ($finalpath as $city) {
   $url = "http://api.weatherapi.com/v1/current.json?key=e7c793d102d04bd58b1121742231302&q=" . $city['city'];
   $weather = json_decode(file_get_contents($url), true);
   $weather_data[$city['city']] = $weather['current']['temp_c'];
 }
 
-
-
 // Get the sorted path
 $sorted_path = [];
 foreach (array_keys($weather_data) as $city) {
-  foreach ($lolpath as $c) {
+  foreach ($finalpath as $c) {
     if ($c['city'] == $city) {
       $sorted_path[] = $c;
       break;
     }
   }
 }
-
-
 
 // Output the sorted path
 ?>
@@ -123,32 +119,34 @@ foreach (array_keys($weather_data) as $city) {
  echo "<div> <h3 style='text-align: center;'> <i class='bi bi-geo-alt'></i>" . $city1['city'] . "<i class='bi bi-arrow-right'></i> " . $city2['city'] . "<i class='bi bi-flag'></i></h3> </div>";
  echo "<hr>";
  echo "<br>";
-
+ echo "<div style='text-align: center;'>";
  echo "<ul style='list-style: none;''>";
- echo "<?php";
+ echo "<h3 style='text-align: center;'> Vaše postojanke: </h3>";
   foreach ($sorted_path as $city) {
-    echo "<li>" . $city['city'] . " (" . $weather_data[$city['city']] . "°C) </li>";
+    echo "<li>" . $city['city'] . " " . $weather_data[$city['city']] . "°C <i class='bi bi-thermometer'></i> </li>";
   }
    echo "</ul>";
-
+    echo "</div>";
    $map_link = "https://www.google.com/maps/dir/";
 
-foreach ($lolpath as $point) {
+foreach ($finalpath as $point) {
   $map_link .= $point["latitude"] . "%2F" . $point["longitude"] . "/";
 }
 
 $map_link = substr($map_link, 0, -1) . "/@" . $center_lat . "," . $center_lng . ",5.52z/data=!4m" . (count($path) + 1) . "!4m" . count($path) . "!1m3";
 ?>
+
 <br>
 <br>
-<hr>
+<hr>  
   <h3 style="text-align: center;"> Klikni na spodnjo povezavo, da si ogledaš potovanje na Google Maps </h3>
   <?php
 echo '<a href='.$map_link.'" target="_blank"  style = " background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);" class="btn d-block w-100 d-sm-inline-block btn-light">Oglej si potovanje</a>';
 ?>
+<h5 style="text-align: center;"> Ti pot ni všeč? Generiraj novo</h5>
+<button onClick="window.location.reload();", style = " background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);"  class="btn d-block w-100 d-sm-inline-block btn-light">Nova pot</button>
 </div>
 <br>
-
 </div>
 </div>
 </div>

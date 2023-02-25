@@ -17,21 +17,7 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <?php
-          session_start();
-          if (!isset($_SESSION['user_id']))
-          {
-          echo '<a class="nav-link" href="index.php">Organiziraj potovanje <span class="sr-only"></span></a>';
-          echo '</li>';
-          echo '<a class="nav-link" href="registration.php">Registracija<span class="sr-only"></span></a>';
-          echo '</li>';
-          echo '<a class="nav-link" href="login.php">Prijava<span class="sr-only"></span></a>';
-          }
-          else
-          {
-            echo '<a class="nav-link" href="index.php">Organiziraj potovanje <span class="sr-only"></span></a>';
-          }
-        ?>
+        <a class="nav-link" href="index.php">Organiziraj potovanje <span class="sr-only"></span></a>
     </ul>
   </div>
 </nav>
