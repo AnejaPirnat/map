@@ -71,7 +71,9 @@ for ($i = 0; $i <= 1; $i += $step_size) {
   foreach($path as $city){
     $query = "SELECT * FROM location WHERE longitude < ? AND longitude > ?  AND latitude < ? AND latitude > ? ";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$city['longitude'] + 0.5, $city['longitude'] - 0.5, $city['latitude'] + 0.5, $city['latitude'] - 0.5]);
+    $random = rand(1, 5);
+    $random = $random / 10;
+    $stmt->execute([$city['longitude'] + $random, $city['longitude'] - $random, $city['latitude'] + $random, $city['latitude'] - $random]);
     $cities = $stmt->fetchAll();
     $highest = -100;
     foreach($cities as $c){
