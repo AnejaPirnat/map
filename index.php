@@ -99,7 +99,7 @@ V katerem mestu boš začel potovanje?
 </script>
 Koliko dni želiš potovati?
 <div class="form-outline">
-  <input type="number" name ="days" id="days" min= "1" max ="7" class="form-control" placeholder = "Trajanje potovanja (dnevi)" />
+  <input type="number" name ="days" id="days" min= "1" class="form-control" placeholder = "Trajanje potovanja (dnevi)" />
 </div>
 <br>
 <button type = "submit" style = " background: linear-gradient(90deg, rgba(143,242,208,1) 0%, rgba(175,249,123,1) 100%);"class="btn d-block w-100 d-sm-inline-block btn-light">Izračun poti</button>
